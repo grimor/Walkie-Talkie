@@ -6,7 +6,7 @@
     <ListView android:layout_width="fill_parent" android:id="@+id/wifiList" android:layout_height="350dp"></ListView>
     <LinearLayout android:id="@+id/linearLayout2" android:layout_width="fill_parent" android:layout_gravity="bottom" android:baselineAligned="false" android:layout_height="fill_parent">
         <ToggleButton android:text="ToggleButton" android:layout_weight="1" android:layout_width="0dp" android:layout_height="fill_parent" android:id="@+id/startstopScanButton" android:textOff="@string/startScan" android:textOn="@string/stopScan"></ToggleButton>
-        <Button android:id="@+id/button2" android:text="Button" android:layout_width="0dp" android:layout_height="fill_parent" android:layout_weight="1"></Button>
+        <Button android:layout_width="0dp" android:layout_height="fill_parent" android:layout_weight="1" android:text="@string/startAP" android:id="@+id/startApButton"></Button>
         <Button android:id="@+id/settingsButton" android:text="@string/settings" android:layout_width="0dp" android:layout_height="fill_parent" android:layout_weight="1"></Button>
     </LinearLayout>
 </LinearLayout>
