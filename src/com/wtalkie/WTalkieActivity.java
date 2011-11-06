@@ -43,12 +43,15 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 	ArrayList<String> wifiItemList = new ArrayList<String>();
 	ArrayAdapter<String> adapter;
 	WifiScanner wifiScanner;
+	AccessPoint ap;
 	private boolean launch_control = false; //uzywane przy wyszukiwaniu sieci
+	private static Context context;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        WTalkieActivity.context = getApplicationContext();
         
         buttonStartStop = (ToggleButton) findViewById(R.id.startstopScanButton);
         buttonStartStop.setOnClickListener(this);
@@ -62,30 +65,31 @@ public class WTalkieActivity extends Activity implements OnClickListener {
         wifiList.setOnItemClickListener(new OnItemClickListener() {
         	//@Override
         	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        		//Toast.makeText(getApplicationContext(), "You clicked " + wifiItemList.get(position) ,Toast.LENGTH_LONG).show();
         		//sprawdzenie czy haslo do sieci jest w zapamietane czy nie
-        		
         		dialogHasloDoSieci(wifiItemList.get(position).toString());
-        		
         	}
 		});
         
         wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         if (receiver == null)
         	receiver = new WifiScanner(this);
-        
         isWifiEnable();
     }
 	
 	@Override
-    public void onStop()
-    {
-		//aby nie bylo bledow przy zamykaniu aplikacji 
+	public void onDestroy() {
 		if(launch_control)
 		{
 			launch_control = false;
 			unregisterReceiver(receiver); 
 		}
+		ap.stopAp(wifi);
+		super.onDestroy();
+	}
+	
+	@Override
+    public void onStop()
+    {
     	super.onStop(); 
     }
 	
@@ -94,8 +98,15 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		if(view.getId() == R.id.startApButton)
 		{
-			Intent myIntent = new Intent(view.getContext(), SettingsActivity.class);
-	        startActivityForResult(myIntent, 0);
+			ap = new AccessPoint();
+			ap.createWifiAccessPoint(wifi);
+			if (ap.getApStatus() == true) {
+				Intent myIntent = new Intent(view.getContext(), TalkActivity.class);
+		        startActivityForResult(myIntent, 0);
+			} else {
+				Toast.makeText(view.getContext(), "Cannot run Access Point", 2000);
+			}
+			
 		}
 		if(view.getId() == R.id.settingsButton)
 		{
@@ -115,6 +126,9 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 		}
 	}
 	
+	public static Context getAppContext() {
+		return WTalkieActivity.context;
+	}
 	
 	public void printResults(String object) {
 		wifiItemList.add(object);
@@ -125,7 +139,7 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 		adapter.notifyDataSetChanged();
 	}
 	//laczenie z siecia
-	public void connectNewtwork (String ssid, String pass)
+	public void connectNetwork (String ssid, String pass)
 	{
 		Log.d(TAG, "laczenie z siecia");
 		WifiConfiguration config = new WifiConfiguration();
@@ -148,7 +162,7 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 		       .setCancelable(false)
 		       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
-		        	   connectNewtwork(ssid,input.getText().toString());
+		        	   connectNetwork(ssid,input.getText().toString());
 		           }
 		       })
 		       .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -194,22 +208,21 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 		
 	}
 	//przycisk ZAMKNIJ aplikacje
-	private void wifiOff ()
+	private void wifiOff()
 	{
 		//pytanie czy wylaczyc wifi
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Modu≥ WiFi jest w≥πczony!\nWy≥πczyÊ ?");
+		builder.setMessage("Modu∏ WiFi jest w∏àczony!\nWy∏àczyç ?");
 		builder.setPositiveButton("TAK", new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
 				wifi.setWifiEnabled(false);
-				
 			}
 		});
 		builder.setNegativeButton("NIE", new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
-				//wychodzenie z palikacji, pozostawianie wifi wlaczonego
+				//wychodzenie z aplikacji, pozostawianie wifi wlaczonego
 				
 			}
 		});

@@ -6,4 +6,7 @@
     <string name="startScan">Start Scan</string>
     <string name="stopScan">Stop Scan</string>
     <string name="startAP">Run Access Point</string>
+    <string name="connectedTo">Connected to:</string>
+    <string name="connectionType">Connection Type:</string>
+    <string name="pushToTalk">Push To Talk</string>
 </resources>

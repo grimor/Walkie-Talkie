@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" android:weightSum="1">
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceSmall" android:id="@+id/connectedTo" android:text="@string/connectedTo"></TextView>
+    <TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:textAppearance="?android:attr/textAppearanceSmall" android:id="@+id/connectionType" android:text="@string/connectionType"></TextView>
+    <Button android:layout_width="fill_parent" android:id="@+id/pushToTalkButton" android:text="@string/pushToTalk" android:layout_height="fill_parent"></Button>
+    
+</LinearLayout>

@@ -2,12 +2,21 @@ package com.wtalkie;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.wtalkie.WTalkieActivity;
+import android.app.Activity;
+import android.app.Application;
+import android.content.Intent;
 import android.net.wifi.*;
+import android.view.View;
+import android.widget.Toast;
 
 
 public class AccessPoint {
 
 	String ssid = "Walkie-Talkie";
+	private boolean apstatus;
+	private Method apMethod;
+	private WifiConfiguration netConfig;
 	/**
 	 * Uruchomienie Access Pointa
 	 * @param WifiManager Instance
@@ -22,7 +31,8 @@ public class AccessPoint {
 	    for(Method method: wmMethods){
 	        if(method.getName().equals("setWifiApEnabled")){
 	            methodFound=true;
-	            WifiConfiguration netConfig = new WifiConfiguration();
+	            apMethod = method;
+	            netConfig = new WifiConfiguration();
 	            netConfig.SSID = ""+ssid+"";
 	            netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
 	            //netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
@@ -34,8 +44,7 @@ public class AccessPoint {
 	            //netConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
 	            //netConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
 	            try {
-	                boolean apstatus=(Boolean) method.invoke(wifiManager, netConfig,true);          
-	                //statusView.setText("Creating a Wi-Fi Network \""+netConfig.SSID+"\"");
+	                apstatus=(Boolean) method.invoke(wifiManager, netConfig,true);          
 	                for (Method isWifiApEnabledmethod: wmMethods)
 	                {
 	                    if(isWifiApEnabledmethod.getName().equals("isWifiApEnabled")){
@@ -45,25 +54,16 @@ public class AccessPoint {
 	                            if(method1.getName().equals("getWifiApState")){
 	                                int apstate;
 	                                apstate=(Integer)method1.invoke(wifiManager);
-	                                //                    netConfig=(WifiConfiguration)method1.invoke(wifi);
-	                                //statusView.append("\nSSID:"+netConfig.SSID+"\nPassword:"+netConfig.preSharedKey+"\n");
 	                            }
 	                        }
 	                    }
 	                }
 	                if(apstatus)
 	                {
-	                    System.out.println("SUCCESSdddd");  
-	                    //statusView.append("\nAccess Point Created!");
-	                    //finish();
-	                    //Intent searchSensorsIntent = new Intent(this,SearchSensors.class);            
-	                    //startActivity(searchSensorsIntent);
-
+	                    System.out.println("SUCCESS");  
 	                }else
 	                {
-	                    System.out.println("FAILED");   
-
-	                    //statusView.append("\nAccess Point Creation failed!");
+	                    System.out.println("FAILED");
 	                }
 
 	            } catch (IllegalArgumentException e) {
@@ -78,5 +78,24 @@ public class AccessPoint {
 	    if(!methodFound){
 	        //statusView.setText("Your phone's API does not contain setWifiApEnabled method to configure an access point");
 	    }
+	}
+	public boolean getApStatus() {
+		return apstatus;
+	}
+	public void stopAp(WifiManager wifiManager) {
+		Method[] wmMethods = wifiManager.getClass().getDeclaredMethods();
+		for (Method setWifiApEnabledmethod: wmMethods) {
+			if(setWifiApEnabledmethod.getName().equals("setWifiApEnabled")){
+				try {
+					setWifiApEnabledmethod.invoke(wifiManager, netConfig, false);
+				} catch (IllegalArgumentException e) {
+					e.printStackTrace();
+				} catch (IllegalAccessException e) {
+					e.printStackTrace();
+				} catch (InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }
