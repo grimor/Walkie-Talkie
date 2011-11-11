@@ -36,9 +36,9 @@ public class AccessPoint {
 	            netConfig.SSID = ""+ssid+"";
 	            netConfig.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
 	            //netConfig.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
-	            //netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
-	            //netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
-	            //netConfig.preSharedKey=password;
+	            netConfig.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+	            netConfig.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+	            netConfig.preSharedKey="123123123";
 	            //netConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
 	            //netConfig.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
 	            //netConfig.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);

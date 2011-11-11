@@ -6,6 +6,7 @@ import java.util.EventListener;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -46,6 +47,7 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 	AccessPoint ap;
 	private boolean launch_control = false; //uzywane przy wyszukiwaniu sieci
 	private static Context context;
+	private ProgressDialog progDialog; //dialog "prosze czekac..."
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,18 +96,23 @@ public class WTalkieActivity extends Activity implements OnClickListener {
     }
 	
 	//@Override
-	public void onClick(View view) {
+	public void onClick(final View view) {
 		// TODO Auto-generated method stub
 		if(view.getId() == R.id.startApButton)
 		{
-			ap = new AccessPoint();
-			ap.createWifiAccessPoint(wifi);
-			if (ap.getApStatus() == true) {
-				Intent myIntent = new Intent(view.getContext(), TalkActivity.class);
-		        startActivityForResult(myIntent, 0);
-			} else {
-				Toast.makeText(view.getContext(), "Cannot run Access Point", 2000);
-			}
+			progDialog = ProgressDialog.show(this, "Access Point", "Proszƒô czekaƒá...");
+			new Thread () {
+				public void run() {
+					ap = new AccessPoint();
+					ap.createWifiAccessPoint(wifi);
+					if (ap.getApStatus() == true) {
+						Intent myIntent = new Intent(view.getContext(), TalkActivity.class);
+						progDialog.dismiss();
+				        startActivityForResult(myIntent, 0);
+					} else {
+						Toast.makeText(view.getContext(), "Cannot run Access Point", 2000);
+					}
+				}}.start();
 			
 		}
 		if(view.getId() == R.id.settingsButton)
@@ -144,7 +151,8 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 		Log.d(TAG, "laczenie z siecia");
 		WifiConfiguration config = new WifiConfiguration();
 		config.SSID = "\""+ssid+"\"";
-		config.preSharedKey = "\""+pass+"\"";
+		if(pass != "")
+			config.preSharedKey = "\""+pass+"\"";
 		
 		int id = wifi.addNetwork(config);
 		wifi.enableNetwork(id, true);
@@ -155,10 +163,9 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 	{
 		Log.d(TAG, "klikniecie w siec");
 		final EditText input = new EditText(this);
-		input.setText("123123123");
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setView(input);
-		builder.setMessage("Wpisz has≥o do sieci" +  ssid)
+		builder.setMessage("Wpisz has≈Ço do sieci" +  ssid)
 		       .setCancelable(false)
 		       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
@@ -179,18 +186,29 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 	private void isWifiEnable ()
 	{
 		Log.d(TAG, "sprawdzanie czy modul sieci wlaczony");
-		
 		if(!wifi.isWifiEnabled())
 		{
 			Log.d(TAG, "modul wifi wylaczony");
+			final ProgressDialog progressdialog = new ProgressDialog(this);
+			progressdialog.setMessage("Proszƒô czekaƒá...");
+			progressdialog.setTitle("WiFi");
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("Modu≥ WiFi jest wy≥πczony\nW≥πczyÊ ?")
+			builder.setMessage("Modu≈Ç WiFi jest wy≈ÇƒÖczony.\nW≈ÇƒÖczyƒá ?")
 					.setCancelable(false)
 					.setPositiveButton("TAK", new DialogInterface.OnClickListener() {
 						
 						public void onClick(DialogInterface dialog, int which) {
 							wifi.setWifiEnabled(true);
-							
+							progressdialog.show();
+							new Thread() {
+								public void run() {
+									try{
+										while (!wifi.isWifiEnabled()) {sleep(100);} 
+										progressdialog.dismiss();
+									} catch (Exception e) {} 
+									
+								}
+							}.start();
 						}
 					})
 					.setNegativeButton("NIE", new DialogInterface.OnClickListener() {
@@ -207,12 +225,14 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 
 		
 	}
+	
+
 	//przycisk ZAMKNIJ aplikacje
 	private void wifiOff()
 	{
 		//pytanie czy wylaczyc wifi
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("Modu∏ WiFi jest w∏àczony!\nWy∏àczyç ?");
+		builder.setMessage("Modu¬∏ WiFi jest w¬∏ÔøΩczony!\nWy¬∏ÔøΩczy≈§ ?");
 		builder.setPositiveButton("TAK", new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
