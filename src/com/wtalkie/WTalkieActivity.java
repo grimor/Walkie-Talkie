@@ -19,11 +19,13 @@ import android.content.IntentFilter;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.text.AlteredCharSequence;
+import android.text.method.PasswordTransformationMethod;
 import android.text.style.BulletSpan;
 import android.util.Log;
 import android.view.View.*;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ArrayAdapter;
@@ -158,14 +160,13 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 		wifi.enableNetwork(id, true);
 		
 	}
-	
 	public void dialogHasloDoSieci (final String ssid) 
 	{
+		/*
 		Log.d(TAG, "klikniecie w siec");
 		final EditText input = new EditText(this);
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setView(input);
-		builder.setMessage("Wpisz hasło do sieci" +  ssid)
+		builder.setMessage("Wpisz hasło do sieci " +  ssid)
 		       .setCancelable(false)
 		       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 		           public void onClick(DialogInterface dialog, int id) {
@@ -180,6 +181,42 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 		AlertDialog alert = builder.create();
 		
 		alert.show();
+		*/
+		final Dialog dialog = new Dialog(this);
+		dialog.setContentView(R.layout.dialog_pass);
+		dialog.setTitle("Wpisz hasło do sieci " + ssid);
+		final EditText input = (EditText) dialog.findViewById(R.id.pass);
+		final CheckBox checkb = (CheckBox) dialog.findViewById(R.id.check_pass);
+		checkb.setChecked(true);
+		
+		checkb.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View arg0) {
+				if(checkb.isChecked())
+					input.setTransformationMethod(new PasswordTransformationMethod());
+				else
+					input.setTransformationMethod(null);
+			}
+		});
+		
+		Button button_ok = (Button) dialog.findViewById(R.id.yesButton);
+		button_ok.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				connectNetwork(ssid,input.getText().toString());
+				dialog.cancel();
+			}
+		});
+		Button button_no = (Button) dialog.findViewById(R.id.noButton);
+		button_no.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				dialog.cancel();
+				
+			}
+		});
+		
+		dialog.show();
 	}
 	
 	
