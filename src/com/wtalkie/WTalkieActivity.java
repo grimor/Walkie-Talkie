@@ -138,6 +138,7 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 	public static Context getAppContext() {
 		return WTalkieActivity.context;
 	}
+
 	
 	public void printResults(String object) {
 		wifiItemList.add(object);
@@ -205,6 +206,9 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 			public void onClick(View v) {
 				connectNetwork(ssid,input.getText().toString());
 				dialog.cancel();
+				Intent myIntent = new Intent(v.getContext(), TalkActivity.class);
+				myIntent.putExtra("wifi", true);
+                startActivityForResult(myIntent, 0);   
 			}
 		});
 		Button button_no = (Button) dialog.findViewById(R.id.noButton);
