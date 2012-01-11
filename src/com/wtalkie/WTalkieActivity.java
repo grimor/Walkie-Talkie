@@ -141,26 +141,6 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 				onStop();
 			}
 		}
-		 if(view.getId() == R.id.pushToTalkButton)
-	        {   
-			 /*
-			 try{
-	            String messageStr="Hello Android!";
-	            int server_port = 12345;
-	            DatagramSocket s = new DatagramSocket();
-	            s.setBroadcast(true);
-	            //InetAddress local = WTalkieActivity.getBroadcastAddress(); 
-	            InetAddress local = InetAddress.getByName("192.168.1.100");
-	            int msg_length=messageStr.length();
-	            byte[] message = messageStr.getBytes();
-	            DatagramPacket p = new DatagramPacket(message, msg_length,local,server_port);
-	            s.send(p);  
-			 }
-			 catch(Exception e)
-			 {
-				 
-			 }*/
-	        }
 	}
 	
 	public static Context getAppContext() {

@@ -84,9 +84,11 @@ public class TalkActivity extends Activity {
 	{
 		if(s.equals("down"))
 		{
+			send_data_to_broadcast();
 			Toast.makeText(this,"wcisniety",Toast.LENGTH_SHORT).show();
 			startRecording();
 			//nowy watek - nagrywania i wysylanie tak d³ugo jak recording = true;
+
 			
 			
 		}
@@ -96,6 +98,7 @@ public class TalkActivity extends Activity {
 			stopRecording();
 			startPlaying();
 		}
+		
 	}
 			
 
