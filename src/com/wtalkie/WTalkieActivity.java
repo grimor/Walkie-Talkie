@@ -1,5 +1,9 @@
 package com.wtalkie;
 
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.EventListener;
 
@@ -16,6 +20,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.DhcpInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.text.AlteredCharSequence;
@@ -39,9 +44,10 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 	private static final String TAG = "wifi";
 	Button buttonSettings;
 	Button buttonStartAp;
+	static Button ppt;
 	ToggleButton buttonStartStop;
 	ListView wifiList;
-	public WifiManager wifi;
+	public static WifiManager wifi;
 	private BroadcastReceiver receiver;
 	ArrayList<String> wifiItemList = new ArrayList<String>();
 	ArrayAdapter<String> adapter;
@@ -57,6 +63,7 @@ public class WTalkieActivity extends Activity implements OnClickListener {
         setContentView(R.layout.main);
         WTalkieActivity.context = getApplicationContext();
         
+        ppt = (Button) findViewById(R.id.pushToTalkButton);
         buttonStartStop = (ToggleButton) findViewById(R.id.startstopScanButton);
         buttonStartStop.setOnClickListener(this);
         buttonSettings = (Button) findViewById(R.id.settingsButton);
@@ -123,6 +130,7 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 		}
 		if(view.getId() == R.id.startstopScanButton)
 		{
+			System.out.println("Hello, Earthling");
 			isWifiEnable(); //sprawdzanie czy modul sieci wifi jest wlaczony
 			if(buttonStartStop.isChecked()) {
 				Log.d(TAG, "onClick() wifi.startscan()");
@@ -133,6 +141,26 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 				onStop();
 			}
 		}
+		 if(view.getId() == R.id.pushToTalkButton)
+	        {   
+			 /*
+			 try{
+	            String messageStr="Hello Android!";
+	            int server_port = 12345;
+	            DatagramSocket s = new DatagramSocket();
+	            s.setBroadcast(true);
+	            //InetAddress local = WTalkieActivity.getBroadcastAddress(); 
+	            InetAddress local = InetAddress.getByName("192.168.1.100");
+	            int msg_length=messageStr.length();
+	            byte[] message = messageStr.getBytes();
+	            DatagramPacket p = new DatagramPacket(message, msg_length,local,server_port);
+	            s.send(p);  
+			 }
+			 catch(Exception e)
+			 {
+				 
+			 }*/
+	        }
 	}
 	
 	public static Context getAppContext() {
@@ -155,8 +183,9 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 		WifiConfiguration config = new WifiConfiguration();
 		config.SSID = "\""+ssid+"\"";
 		if(pass != "")
-			config.preSharedKey = "\""+pass+"\"";
-		
+			//config.preSharedKey = "\""+pass+"\"";
+			config.preSharedKey = "\"193920111410dupa\"";
+					
 		int id = wifi.addNetwork(config);
 		wifi.enableNetwork(id, true);
 		
@@ -263,8 +292,6 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 			AlertDialog dialog = builder.create();
 			dialog.show();
 		}
-
-		
 	}
 	
 
