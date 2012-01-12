@@ -1,35 +1,16 @@
 package com.wtalkie;
 
-import java.beans.IndexedPropertyChangeEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.security.InvalidParameterException;
-
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
-import android.location.Address;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioRecord;
-import android.media.AudioTrack;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
 import android.net.DhcpInfo;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 public class TalkActivity extends Activity {
 	
@@ -37,11 +18,10 @@ public class TalkActivity extends Activity {
 	 TextView connectedTo;
 	 TextView connectedType;
 	 Button pushToTalk;
-	 InetAddress broadcast;
-	 boolean recording;
-	 String mFileName = null;
-	 MediaRecorder mRecorder = new MediaRecorder();
-	 MediaPlayer  mPlayer = new MediaPlayer();
+	 static InetAddress broadcast;
+	 static int _port = 12345;
+	 static boolean recording;
+ 
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,18 +44,19 @@ public class TalkActivity extends Activity {
 	    pushToTalk.setOnTouchListener(new View.OnTouchListener() {
 			
 			public boolean onTouch(View v, MotionEvent event) {
+				String action = "";
 				if(event.getAction() == MotionEvent.ACTION_DOWN) {
 					recording = true;
-					button_action("down");
+					action = "down";
 				}
 				if (event.getAction() == MotionEvent.ACTION_UP) {
-					recording = false;
-					button_action("up");
+					recording = false;		
+					action="up";
 				}
+				button_action(action);
 				return false;
 			}
 		});
-
 
 	    // TODO Auto-generated method stub
 	}
@@ -84,24 +65,16 @@ public class TalkActivity extends Activity {
 	{
 		if(s.equals("down"))
 		{
-			send_data_to_broadcast();
-			Toast.makeText(this,"wcisniety",Toast.LENGTH_SHORT).show();
-			startRecording();
-			//nowy watek - nagrywania i wysylanie tak d³ugo jak recording = true;
-
-			
-			
+			//Toast.makeText(this,"wcisniety",Toast.LENGTH_SHORT).show();
+			AudioActivity send = new AudioActivity("send");
 		}
 		if(s.equals("up"))
 		{
-			Toast.makeText(this,"puszczony",Toast.LENGTH_SHORT).show();
-			stopRecording();
-			startPlaying();
+			//Toast.makeText(this,"puszczony",Toast.LENGTH_SHORT).show();	
+			AudioActivity receive = new AudioActivity("receive");
 		}
-		
 	}
 			
-
 	public InetAddress getBroadcastAddress() throws IOException {
 	    DhcpInfo dhcp = WTalkieActivity.wifi.getDhcpInfo();
 	    // handle null somehow
@@ -109,65 +82,21 @@ public class TalkActivity extends Activity {
 	    byte[] quads = new byte[4];
 	    for (int k = 0; k < 4; k++)
 	      quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
-	    return InetAddress.getByAddress(quads);
-	    
+	    return InetAddress.getByAddress(quads);    
 	}
 	
-	public void send_data_to_broadcast()
-	{
-		 try{
-	            String messageStr="Hello Android!";
-	            int _port = 12345;
-	            DatagramSocket s = new DatagramSocket();
-	            s.setBroadcast(true);
-	            int msg_length=messageStr.length();
-	            byte[] message = messageStr.getBytes();
-	            DatagramPacket p = new DatagramPacket(message, msg_length,broadcast,_port);
-	            s.send(p);  
-			 }
-			 catch(Exception e)
-			 {
-
-			 }
-	}
-	
-
-		    private void startRecording() {
-		   	 mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-		     mFileName += "/audiorecordtest.3gp";
-		     mRecorder = new MediaRecorder();
-		     mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-		     mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-		     mRecorder.setOutputFile(mFileName);
-		     mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-		     try 
-		     {
-		            mRecorder.prepare();
-		     } 
-		     catch (IOException e) 
-		     {  
-		     }
-		        mRecorder.start();
-		    }
-
-		    private void stopRecording() {
-		        mRecorder.stop();
-		        mRecorder.release();
-		        mRecorder = null;
-		    }
-		    
-		    private void startPlaying() {
-		        mPlayer = new MediaPlayer();
-		        try {
-		            mPlayer.setDataSource(mFileName);
-		            mPlayer.prepare();
-		            mPlayer.start();
-		        } catch (IOException e) {
-		            
-		        }
-		    }
-
-
-	    
-	    
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
