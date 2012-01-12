@@ -35,6 +35,7 @@ public class TalkActivity extends Activity {
 	    {
 	    	broadcast = getBroadcastAddress();
 	    	connectedTo.setText(connectedTo.getText() + " " + WTalkieActivity.wifi.getDhcpInfo().dns1);
+	    	AudioActivity receive = new AudioActivity("receive");
 		} 
 	    catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -71,7 +72,7 @@ public class TalkActivity extends Activity {
 		if(s.equals("up"))
 		{
 			//Toast.makeText(this,"puszczony",Toast.LENGTH_SHORT).show();	
-			AudioActivity receive = new AudioActivity("receive");
+			
 		}
 	}
 			

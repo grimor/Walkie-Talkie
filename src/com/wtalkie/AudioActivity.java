@@ -82,10 +82,14 @@ public class AudioActivity extends Thread {
 	{
 		try
 		{
-			clientSocket = new DatagramSocket();
-			DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-			clientSocket.receive(receivePacket);
-			playMp3(receivePacket.getData());
+			while(true)
+			{
+				receiveData = new byte[1024];
+				clientSocket = new DatagramSocket(TalkActivity._port);
+				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+				clientSocket.receive(receivePacket);
+				playMp3(receivePacket.getData());
+			}
 		}
 		catch(Exception e)
 		{
@@ -96,8 +100,7 @@ public class AudioActivity extends Thread {
 	private void playMp3(byte[] mp3SoundByteArray) {
 	    try {
 	        // create temp file that will hold byte array
-	    	Environment directory = new Environment();
-	        File tempMp3 = File.createTempFile("temp", "mp3",directory.getDownloadCacheDirectory());
+	        File tempMp3 = File.createTempFile("temp", "mp3",Environment.getExternalStorageDirectory().getAbsoluteFile());
 	        tempMp3.deleteOnExit();
 	        FileOutputStream fos = new FileOutputStream(tempMp3);
 	        fos.write(mp3SoundByteArray);
