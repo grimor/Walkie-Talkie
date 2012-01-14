@@ -70,6 +70,7 @@ public class AudioActivity extends Thread {
 		 {      	 
 	            DatagramSocket s = new DatagramSocket();
 	            s.setBroadcast(true);
+	            TalkActivity.broadcast = InetAddress.getByName("192.168.43.255");
 	            DatagramPacket p = new DatagramPacket(buffer, buffer.length,TalkActivity.broadcast,TalkActivity._port);
 	            s.send(p);
 		}
@@ -100,8 +101,8 @@ public class AudioActivity extends Thread {
 	private void playMp3(byte[] mp3SoundByteArray) {
 	    try {
 	        // create temp file that will hold byte array
-	        File tempMp3 = File.createTempFile("temp", "mp3",Environment.getExternalStorageDirectory().getAbsoluteFile());
-	        tempMp3.deleteOnExit();
+	        File tempMp3 = File.createTempFile("temp", ".mp3",Environment.getExternalStorageDirectory().getAbsoluteFile());
+	        //tempMp3.deleteOnExit();
 	        FileOutputStream fos = new FileOutputStream(tempMp3);
 	        fos.write(mp3SoundByteArray);
 	        fos.close();
@@ -115,6 +116,11 @@ public class AudioActivity extends Thread {
 	        mediaPlayer.setDataSource(fis.getFD());
 	        mediaPlayer.prepare();
 	        mediaPlayer.start();
+	        while(mediaPlayer.isPlaying())
+	        {
+	        	
+	        }
+	        mediaPlayer.stop();
 	    } 
 	    catch (IOException ex) 
 	    {
