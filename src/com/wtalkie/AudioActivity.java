@@ -1,9 +1,11 @@
 package com.wtalkie;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -58,6 +60,7 @@ public class AudioActivity extends Thread {
 				send_data_to_broadcast();
 			}
 			recorder.stop();
+			recorder.release();
 		}
 		catch(Exception e)
 		{
@@ -89,7 +92,7 @@ public class AudioActivity extends Thread {
 				clientSocket = new DatagramSocket(TalkActivity._port);
 				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 				clientSocket.receive(receivePacket);
-				playMp3(receivePacket.getData());
+				playMp3(receiveData);
 			}
 		}
 		catch(Exception e)
@@ -102,7 +105,7 @@ public class AudioActivity extends Thread {
 	    try {
 	        // create temp file that will hold byte array
 	        File tempMp3 = File.createTempFile("temp", ".mp3",Environment.getExternalStorageDirectory().getAbsoluteFile());
-	        //tempMp3.deleteOnExit();
+	        tempMp3.deleteOnExit();
 	        FileOutputStream fos = new FileOutputStream(tempMp3);
 	        fos.write(mp3SoundByteArray);
 	        fos.close();
