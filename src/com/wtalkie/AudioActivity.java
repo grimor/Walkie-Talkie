@@ -50,6 +50,7 @@ public class AudioActivity extends Thread {
 			maxSize = AudioRecord.getMinBufferSize(8000, 
 					AudioFormat.CHANNEL_CONFIGURATION_MONO, 
 					AudioFormat.ENCODING_PCM_16BIT);
+			maxSize=10240;
 			buffer = new byte[maxSize]; 
 			recorder = new AudioRecord(AudioSource.MIC, 8000, AudioFormat.CHANNEL_CONFIGURATION_MONO, AudioFormat.ENCODING_PCM_16BIT, maxSize);
 		
@@ -88,7 +89,7 @@ public class AudioActivity extends Thread {
 		{
 			while(true)
 			{
-				receiveData = new byte[1024];
+				receiveData = new byte[10240];
 				clientSocket = new DatagramSocket(TalkActivity._port);
 				DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
 				clientSocket.receive(receivePacket);
@@ -105,7 +106,7 @@ public class AudioActivity extends Thread {
 	    try {
 	        // create temp file that will hold byte array
 	        File tempMp3 = File.createTempFile("temp", ".mp3",Environment.getExternalStorageDirectory().getAbsoluteFile());
-	        tempMp3.deleteOnExit();
+	        //tempMp3.deleteOnExit();
 	        FileOutputStream fos = new FileOutputStream(tempMp3);
 	        fos.write(mp3SoundByteArray);
 	        fos.close();
