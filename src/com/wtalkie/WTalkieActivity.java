@@ -1,12 +1,6 @@
 package com.wtalkie;
 
-import java.io.IOException;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.util.ArrayList;
-import java.util.EventListener;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -20,14 +14,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.DhcpInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
-import android.text.AlteredCharSequence;
 import android.text.method.PasswordTransformationMethod;
-import android.text.style.BulletSpan;
 import android.util.Log;
-import android.view.View.*;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CheckBox;
@@ -276,6 +266,7 @@ public class WTalkieActivity extends Activity implements OnClickListener {
 	
 
 	//przycisk ZAMKNIJ aplikacje
+	@SuppressWarnings("unused")
 	private void wifiOff()
 	{
 		//pytanie czy wylaczyc wifi

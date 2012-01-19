@@ -23,6 +23,7 @@ public class TalkActivity extends Activity {
 	 static boolean recording;
  
 	/** Called when the activity is first created. */
+	@SuppressWarnings("unused")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -67,6 +68,7 @@ public class TalkActivity extends Activity {
 		if(s.equals("down"))
 		{
 			//Toast.makeText(this,"wcisniety",Toast.LENGTH_SHORT).show();
+			@SuppressWarnings("unused")
 			AudioActivity send = new AudioActivity("send");
 		}
 		if(s.equals("up"))
@@ -76,7 +78,7 @@ public class TalkActivity extends Activity {
 		}
 	}
 			
-	public InetAddress getBroadcastAddress() throws IOException {
+	public static InetAddress getBroadcastAddress() throws IOException {
 	    DhcpInfo dhcp = WTalkieActivity.wifi.getDhcpInfo();
 	    // handle null somehow
 	    int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;

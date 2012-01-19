@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" android:orientation="vertical" android:weightSum="1">
     <TextView android:textAppearance="?android:attr/textAppearanceLarge" android:layout_height="wrap_content" android:id="@+id/wifiListView" android:text="Choose Wifi Network" android:layout_width="fill_parent" android:layout_gravity="right"></TextView>
-    <ListView android:layout_width="fill_parent" android:id="@+id/wifiList" android:layout_height="350dp"></ListView>
+    <ListView android:layout_width="fill_parent" android:id="@+id/wifiList" android:layout_height="276dp"></ListView>
     <LinearLayout android:id="@+id/linearLayout2" android:layout_width="fill_parent" android:layout_gravity="bottom" android:baselineAligned="false" android:layout_height="fill_parent">
         <ToggleButton android:text="ToggleButton" android:layout_weight="1" android:layout_width="0dp" android:layout_height="fill_parent" android:id="@+id/startstopScanButton" android:textOff="@string/startScan" android:textOn="@string/stopScan"></ToggleButton>
         <Button android:layout_width="0dp" android:layout_height="fill_parent" android:layout_weight="1" android:text="@string/startAP" android:id="@+id/startApButton"></Button>

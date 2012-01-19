@@ -2,25 +2,21 @@ package com.wtalkie;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.wtalkie.WTalkieActivity;
-import android.app.Activity;
-import android.app.Application;
-import android.content.Intent;
 import android.net.wifi.*;
-import android.view.View;
-import android.widget.Toast;
 
 
 public class AccessPoint {
 
 	String ssid = "Walkie-Talkie";
 	private boolean apstatus;
+	@SuppressWarnings("unused")
 	private Method apMethod;
 	private WifiConfiguration netConfig;
 	/**
 	 * Uruchomienie Access Pointa
 	 * @param WifiManager Instance
 	 */
+	@SuppressWarnings("unused")
 	public void createWifiAccessPoint(WifiManager wifiManager) {
 		if(wifiManager.isWifiEnabled())
 	    {

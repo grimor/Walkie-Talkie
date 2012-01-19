@@ -1,16 +1,13 @@
 package com.wtalkie;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import android.content.Context;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaPlayer;
@@ -75,8 +72,10 @@ public class AudioActivity extends Thread {
 	            DatagramSocket s = new DatagramSocket();
 	            s.setBroadcast(true);
 	            TalkActivity.broadcast = InetAddress.getByName("192.168.43.255");
-	            DatagramPacket p = new DatagramPacket(buffer, buffer.length,TalkActivity.broadcast,TalkActivity._port);
-	            s.send(p);
+	            DatagramPacket p1 = new DatagramPacket(buffer, buffer.length,TalkActivity.broadcast,TalkActivity._port);
+	            DatagramPacket p2 = new DatagramPacket(buffer, buffer.length,TalkActivity.getBroadcastAddress(),TalkActivity._port);
+	            s.send(p1);
+	            s.send(p2);
 		}
 		catch(Exception e)
 		{		 
